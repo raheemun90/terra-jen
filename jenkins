@@ -4,8 +4,9 @@ pipeline {
     stages {
 
         stage('Checkout') {
+stage('Checkout') {
             steps {
-                git 'https://github.com/hashicorp/learn-terraform-provision-ec2-instance.git'
+                git branch: 'main', url: ''
             }
         }
 
