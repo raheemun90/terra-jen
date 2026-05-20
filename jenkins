@@ -1,5 +1,12 @@
 pipeline {
     agent any
+parameters {
+        choice(
+            name: 'ACTION',
+            choices: ['apply', 'destroy'],
+            description: 'Choose Terraform Action'
+        )
+    }
 environment {
     AWS_ACCESS_KEY_ID = credentials('aws_access_key')
     AWS_SECRET_ACCESS_KEY = credentials('aws_secret_key')
@@ -27,20 +34,29 @@ environment {
                 sh 'terraform show -no-color tfplan > tfplan.txt'
             }
         }
-
-        stage('Terraform Apply') {
+ stage('Terraform Action') {
             steps {
-                input message: 'Approve Terraform Apply?'
-                sh 'terraform apply -auto-approve tfplan'
-            }
-        }
-stage('Terraform Destroy') {
-    steps {
-        input message: 'Approve Terraform Destroy?'
+                script {
 
-        sh 'terraform destroy -auto-approve tfplan'
-    }
-}
+                    if (params.ACTION == 'apply') {
+
+                        sh 'terraform plan -out=tfplan'
+                        sh 'terraform apply -auto-approve tfplan'
+
+                    } else if (params.ACTION == 'destroy') {
+
+                        sh 'terraform destroy -auto-approve'
+
+                    }
+
+                }
+            }
+
+
+
+
+
+      
 
     }
 }
