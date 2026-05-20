@@ -30,12 +30,15 @@ environment {
 
         stage('Terraform Apply') {
             steps {
-                sh 'terraform apply -auto-approve'
+                input message: 'Approve Terraform Apply?'
+                sh 'terraform apply -auto-approve tfplan'
             }
         }
 stage('Terraform Destroy') {
     steps {
-        sh 'terraform destroy -auto-approve'
+        input message: 'Approve Terraform Destroy?'
+
+        sh 'terraform destroy -auto-approve tfplan'
     }
 }
 
