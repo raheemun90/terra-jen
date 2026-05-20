@@ -19,15 +19,12 @@ environment {
             }
         }
 
-        stage('Terraform Validate') {
-            steps {
-                sh 'terraform validate -no-color'
-            }
-        }
+        
 
         stage('Terraform Plan') {
             steps {
-                sh 'terraform plan'
+                sh 'terraform plan -out tfplan'
+                sh 'terraform show -no-color tfplan > tfplan.txt'
             }
         }
 
